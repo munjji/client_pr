@@ -1,34 +1,46 @@
-import type { MovieProps, MovieResponse } from "../types/movie";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import Movie from "../components/Movie/Movie";
-import { useParams } from "react-router-dom";
+import type { MovieProps, MovieResponse } from "../types/movie";
 
 const MoviesPage = () => {
   const { movieCategory } = useParams();
   const [movies, setMovies] = useState<MovieProps[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchMovies = async () => {
-      console.log(movieCategory);
-      const { data } = await axios.get<MovieResponse>(
-        `https://api.themoviedb.org/3/movie/${movieCategory}?language=ko-KR&page=1`,
-        {
-          headers: {
-            Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI3MDJkMDJlMTJiMjUyNjliMzJhOWZhOWUwZDdmNzAxZSIsIm5iZiI6MTY5Njg2NjkzNy40NTksInN1YiI6IjY1MjQyMjc5ZmQ2MzAwMDBjNTY5NzA5MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.7yJDXC4THhoaZU7QjXxBIeJ3tBOqXxjt6oPFeKr2HrU`,
-          },
-        }
-      );
-      console.log(data);
-      setMovies(data.results);
+      setIsLoading(true);
+      try {
+        const { data } = await axios.get<MovieResponse>(
+          `https://api.themoviedb.org/3/movie/${movieCategory}?language=ko-KR&page=1`,
+          {
+            headers: {
+              Authorization: `Bearer ...`,
+            },
+          }
+        );
+        setMovies(data.results);
+      } catch (error) {
+        console.error("영화 데이터 로딩 실패", error);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchMovies();
   }, [movieCategory]);
 
   return (
-    <div className="flex flex-row justify-center items-center">
-      <Movie movies={movies} />
+    <div className="flex justify-center items-center">
+      {isLoading ? (
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
+      ) : (
+        <div className="flex justify-center items-center">
+          <Movie movies={movies} />
+        </div>
+      )}
     </div>
   );
 };
