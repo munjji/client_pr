@@ -1,10 +1,13 @@
-import { Link } from "react-router-dom";
+import Nav from "./Nav";
 
 const Navbar = () => {
   return (
-    <nav>
-      <Link to={"/"}>홈 페이지로 이동</Link>
-      <Link to="/movies">영화 목록 페이지로 이동</Link>
+    <nav className="h-16 flex items-center pl-4 gap-2 text-gray-700">
+      <Nav page="home" />
+      <Nav page="upcoming" />
+      <Nav page="popular" />
+      <Nav page="top-rated" />
+      <Nav page="now_playing" />
     </nav>
   );
 };
