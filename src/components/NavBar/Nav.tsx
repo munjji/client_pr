@@ -9,7 +9,7 @@ const Nav: React.FC<NavProps> = ({ page }) => {
     home: "홈",
     upcoming: "개봉 예정",
     popular: "인기 영화",
-    "top-rated": "평점 높은",
+    top_rated: "평점 높은",
     now_playing: "상영 중",
   };
 
